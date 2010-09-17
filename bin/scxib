@@ -1,0 +1,53 @@
+#!/bin/sh
+JSC=/System/Library/Frameworks/JavaScriptCore.framework/Resources/jsc
+
+show_help() {
+  echo "Usage: $0 [options] file [file ...]"
+  echo "Options:"
+  echo "  -namespace <namespace>  SC.Application namespace"
+  echo "  -page <page name>       SC.Page name"
+  echo "  -panel <panel name>     SC.Panel name"
+}
+
+while true; do
+    case "$1" in
+      -h|--help|-\?) show_help; exit 0;;
+      -namespace) if [ $# -gt 1 ]; then
+            namespace=$2; shift 2
+          else
+            echo "-namespace requires an argument" 1>&2
+            exit 1
+          fi ;;
+      -page) if [ $# -gt 1 ]; then
+            page=$2; shift 2
+          else
+            echo "-page requires an argument" 1>&2
+            exit 1
+          fi ;;
+      -panel) if [ $# -gt 1 ]; then
+            panel=$2; shift 2
+          else
+            echo "-panel requires an argument" 1>&2
+            exit 1
+          fi ;;
+      --) shift; break;;
+      -*) echo "invalid option: $1" 1>&2; show_help; exit 1;;
+      *)  break;;
+    esac
+done
+
+if [[ -z $namespace ]]; then
+  echo "$0: no namespace"; exit 1
+fi
+
+basedir=`dirname $0`/..
+
+if [[ -n $page ]]; then
+  src=`xsltproc --param namespace "'$namespace'" --param pageName "'$page'" $basedir/resources/SCXIB.xslt $@`
+elif [[ -n $panel ]]; then
+  src=`xsltproc --param namespace "'$namespace'" --param panelName "'$panel'" $basedir/resources/SCXIB.xslt $@`
+else
+  echo "$0: no page or panel"; exit 1
+fi
+
+exec $JSC $basedir/lib/parse-js._js $basedir/lib/process._js $basedir/lib/beautify._js -- "$src"
