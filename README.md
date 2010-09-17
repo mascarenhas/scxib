@@ -4,6 +4,8 @@ SCXIB - Interface Builder for the Web
 SCXIB (pronounced ska-zib) grew out of the desire to use Interface Builder
 as a design tool for SproutCore applications.
 
+[View the Demo Video]
+
 ## How to use SCXIB
 
 ### On-the-fly Application Loading
@@ -49,3 +51,5 @@ using a command line tool:
   - NSMatrix -> SC.RadioView
   - NSTabView -> SC.TabView
   - NSBox Horizontal/Vertical -> SC.SeparatorView:layoutDirection SC.LAYOUT\_HORIZONTAL/SC.LAYOUT\_VERTICAL
+
+[View the Demo Video]: http://www.vimeo.com/15064851
